@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--<record model="ir.ui.view" id="view_budget_post_form">
+            <field name="name">res.mark.form</field>
+            <field name="model">res.mark</field>
+            <field name="arch" type="xml">
+                <form string="Budgetary Position">
+                    <sheet>
+                        <group col="6">
+                            <field name="name"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+    </record>-->
+
+    <record id="view_res_mark_tree" model="ir.ui.view">
+        <field name="name">res.mark.tree</field>
+        <field name="model">res.mark</field>
+        <field name="arch" type="xml">
+            <tree string="Marques" editable="bottom">
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="open_res_mark_form" model="ir.actions.act_window">
+        <field name="name">Marques</field>
+        <field name="res_model">res.mark</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="view_res_mark_tree"/>
+    </record>
+
+    <menuitem action="open_res_mark_form" id="menu_res_mark_form"
+              parent="stock.menu_product_in_config_stock"/>
+
+</odoo>

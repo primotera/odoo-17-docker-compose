@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- Assets pour Odoo 17 -->
+    <template id="assets_backend" inherit_id="web.assets_backend">
+        <xpath expr="//script[last()]" position="after">
+            <script type="text/javascript" src="/comptant_partner/static/src/js/account_move_form.js"></script>
+        </xpath>
+    </template>
+</odoo>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <template id="report_deliveryslip_custom" inherit_id="stock.report_delivery_document">
+        <!-- Example of modifying an existing field -->
+        <xpath expr="//div[@class='page']/h2" position="replace">
+            <h2>BON DE LIVRAISON <span t-field="o.name">WH/OUT/0001</span></h2>
+        </xpath>
+
+        <!-- Add additional changes here -->
+    </template>
+</odoo>

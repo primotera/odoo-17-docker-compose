@@ -1,0 +1,17 @@
+<odoo>
+    <data>
+        <!-- Inherit the sale.order form view -->
+        <record id="view_sale_order_inherit" model="ir.ui.view">
+            <field name="name">sale.order.inherit</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="arch" type="xml">
+                <!-- Add your modifications here -->
+                <!-- For example, add a new field -->
+                <field name="sale_order_template_id" position="before">
+                    <field name="client_order_ref" readonly="state in ['cancel', 'sale']"/>
+                </field>
+            </field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- Héritage du formulaire de facture client -->
+    <record id="view_move_form_inherit_comptant" model="ir.ui.view">
+        <field name="name">account.move.form.inherit.comptant</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <!-- Ajout du champ is_comptant et numero_ordre dans l'en-tête de la facture -->
+            <xpath expr="//field[@name='payment_reference']" position="after">
+                <field name="is_comptant" invisible="move_type not in ['out_invoice', 'out_refund']"/>
+                <field name="numero_ordre" readonly="1" invisible="move_type not in ['out_invoice', 'out_refund']"/>
+            </xpath>
+        </field>
+    </record>
+    
+    <!-- Héritage de la vue liste des factures -->
+    <record id="view_move_tree_inherit_comptant" model="ir.ui.view">
+        <field name="name">account.move.tree.inherit.comptant</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="is_comptant" optional="show"/>
+                <field name="numero_ordre" optional="show"/>
+            </xpath>
+        </field>
+    </record>
+    
+    <!-- Héritage de la vue recherche pour permettre de filtrer par type comptant -->
+    <record id="view_account_move_filter_inherit_comptant" model="ir.ui.view">
+        <field name="name">account.move.select.inherit.comptant</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_account_move_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='posted']" position="after">
+                <filter string="Factures/Avoirs Comptant" name="is_comptant" domain="[('is_comptant', '=', True)]"/>
+                <filter string="Factures/Avoirs Non Comptant" name="is_not_comptant" domain="[('is_comptant', '=', False)]"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

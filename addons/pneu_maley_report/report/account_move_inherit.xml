@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <template id="account_move_report_inherit"  inherit_id="account.report_invoice_document">
+            <xpath expr="//div[@name='comment']" position="after">
+                <br/>
+                <br/>
+                <br/>
+                <div class="d-inline text-muted lh-sm fst-italic">
+                    <p>
+                        <span>Vendeur :</span>
+                        <span t-field="o.invoice_user_id"/>
+                    </p>
+                </div>
+                <br/>
+                    <div class="d-inline text-muted lh-sm fst-italic">
+                        <p>
+                            <span>Signature du Client</span>
+                        </p>
+                </div>
+            </xpath>
+        </template>
+    </data>
+</odoo>

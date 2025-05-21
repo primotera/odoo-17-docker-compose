@@ -1,0 +1,125 @@
+<odoo>
+<data>
+    <template id="report_offre_batt_100ah_tsg">
+      <t t-call="web.external_layout">
+        <div class="page">
+          <div class="oe_structure"/>
+          <div class="header">
+            <h2>Devis No 21148347 du 07/05/2024</h2>
+          </div>
+          <div class="content">
+            <table style="width: 100%;">
+              <tr>
+                <td>Date</td>
+                <td>No Client</td>
+                <td>Page(s)</td>
+              </tr>
+              <tr>
+                <td>07/05/24</td>
+                <td>C20031</td>
+                <td>1</td>
+              </tr>
+            </table>
+            
+            <br/>
+            
+            <p>TSG SENEGAL S.A<br/>
+            Km 4.5 du Bd du Commune Dakar<br/>
+            BP 1237 Tel: 859 43 43<br/>
+            DAKAR SENEGAL<br/>
+            221 SENEGAL</p>
+
+            <p>Objet: OFFRE BATTERIE 100AH</p>
+            
+            <p>Votre interlocuteur<br/>
+            V/Réf: KHADIM DIONGUE 77 885 63 89</p>
+            
+            <br/>
+
+            <table class="table table-sm" style="width: 100%; border: 1px solid black; border-collapse: collapse;">
+              <thead>
+                <tr style="border: 1px solid black;">
+                  <th>Code Article</th>
+                  <th>Désignation</th>
+                  <th>UMV</th>
+                  <th>Qtité</th>
+                  <th>P.U.</th>
+                  <th>R%</th>
+                  <th>Taxe</th>
+                  <th>Montant HT</th>
+                  <th>HT</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr style="border: 1px solid black;">
+                  <td>TNT 100 AH B</td>
+                  <td>BATTERIE 12 V 100 AH TNT BLINDE</td>
+                  <td>3,00</td>
+                  <td>75000</td>
+                  <td>18,00</td>
+                  <td>225000</td>
+                </tr>
+              </tbody>
+            </table>
+            
+            <br/>
+
+            <p>Libellé TVA 18% M TOTAL H.T 225 000 CFA<br/>
+            Base HT 225000 TOTAL TVA 40 500 CFA<br/>
+            Taxes  40500 TOTAL Toutes Taxes Comprises 265 500 CFA</p>
+
+            <p>Rajouter FCFA en cas de paiement en espèce, soit : 2 655 FCFA268 155<br/>
+            Conditions Particulières: Néant</p>
+
+            <br/>
+            
+            <p>Adresse de Livraison: TSG SENEGAL S.A<br/>
+            Adresse de Facturation: TSG SENEGAL S.A</p>
+            
+            <br/>
+
+            <p>Bon pour accord<br/>
+            Date<br/>
+            Cachet et signature lisible<br/>
+            Vous en souhaitant bonne réception</p>
+            
+            <br/>
+            
+            <p>03, Av Lamine GUEYE/Km 2.5 BCCD RC SN DKR 2003 B 0252 - NINEA 2255893 2G2<br/>
+            TEL/BUR:33 889 64 04/FAX:33 822 82 28 web: www.etsmaleye.com BP: 7459 DAKAR<br/>
+            E-mail: ets_maleye@yahoo.fr etsmaleye@etsmaleye.com</p>
+          </div>
+        </div>
+      </t>
+  </template>
+
+
+
+  <template id="pneu_maley_report_invoice">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <t t-set="lang" t-value="o.partner_id.lang"/>
+                    <t t-call="pneu_maley_report.report_offre_batt_100ah_tsg"
+                       t-lang="lang"/>
+                </t>
+            </t>
+        </template>
+
+  <record id="account_invoices_pneu_maley" model="ir.actions.report">
+            <field name="name">Offre Batt 100AH TSG</field>
+            <field name="model">account.move</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">pneu_maley_report.pneu_maley_report_invoice</field>
+            <field name="report_file">pneu_maley_report.pneu_maley_report_invoice</field>
+            <field name="print_report_name">(object._get_report_base_filename())</field>
+            <field name="attachment"/>
+            <field name="binding_model_id" ref="account.model_account_move"/>
+            <field name="binding_type">report</field>
+        </record>
+
+
+
+  </data>
+
+
+</odoo>
