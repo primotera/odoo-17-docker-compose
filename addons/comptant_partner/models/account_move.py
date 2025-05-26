@@ -65,10 +65,8 @@ class AccountMove(models.Model):
         # Création normale via la méthode parent
         moves = super(AccountMove, self).create(vals_list)
         
-        # Attribution du numéro d'ordre aux nouvelles factures/avoirs
-        for move in moves:
-            if move.move_type in ('out_invoice', 'out_refund'):
-                move._compute_numero_ordre()
+        # Ne plus attribuer le numéro d'ordre à la création
+        # Il sera attribué lors de la validation (post)
         
         return moves
     
@@ -95,12 +93,9 @@ class AccountMove(models.Model):
                         if update_vals:
                             move.write(update_vals)
             
-            # Appel au parent et recalcul du numéro d'ordre
-            result = super(AccountMove, self).write(vals)
-            for move in self:
-                if move.move_type in ('out_invoice', 'out_refund'):
-                    move._compute_numero_ordre()
-            return result
+            # Appel au parent - ne plus recalculer le numéro d'ordre ici
+            # Il sera généré uniquement lors de la validation
+            return super(AccountMove, self).write(vals)
         
         return super(AccountMove, self).write(vals)
     
@@ -133,10 +128,21 @@ class AccountMove(models.Model):
             if not self.invoice_date_due:
                 self.invoice_date_due = today
     
+    def action_post(self):
+        """Surcharge de la méthode de validation pour générer le numéro d'ordre"""
+        # Générer le numéro d'ordre avant la validation pour les factures/avoirs clients
+        for move in self:
+            if (move.move_type in ('out_invoice', 'out_refund') and 
+                move.state == 'draft' and not move.numero_ordre):
+                move._compute_numero_ordre()
+        
+        # Appeler la méthode parent pour valider la facture
+        return super(AccountMove, self).action_post()
+    
     def _compute_numero_ordre(self):
         """Génère le numéro d'ordre en fonction du type de facture/avoir et du statut comptant"""
         for move in self:
-            if move.state == 'draft' and move.move_type in ('out_invoice', 'out_refund'):
+            if move.move_type in ('out_invoice', 'out_refund') and not move.numero_ordre:
                 sequence_code = False
                 
                 # Déterminer quelle séquence utiliser en fonction du type et du statut comptant
