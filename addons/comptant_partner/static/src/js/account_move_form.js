@@ -1,69 +1,73 @@
-odoo.define('comptant_partner.account_move_form', function (require) {
-    "use strict";
+/** @odoo-module **/
 
-    var core = require('web.core');
-    var _t = core._t;
-    var FormRenderer = require('web.FormRenderer');
-    
+import { FormRenderer } from "@web/views/form/form_renderer";
+import { patch } from "@web/core/utils/patch";
+
+patch(FormRenderer.prototype, {
     /**
-     * Extension du renderer du formulaire pour gérer les événements sur le champ is_comptant
+     * Surcharge de la méthode setup pour ajouter un gestionnaire d'événements après le rendu
      */
-    FormRenderer.include({
-        /**
-         * Surcharge de la méthode _renderView pour ajouter un gestionnaire d'événements après le rendu
-         */
-        _renderView: function () {
-            var self = this;
-            return this._super.apply(this, arguments).then(function () {
-                // Pour ne s'appliquer qu'aux formulaires account.move
-                if (self.state && self.state.model === 'account.move') {
-                    self._setupComptantHandler();
+    setup() {
+        super.setup(...arguments);
+        this.setupComptantHandler();
+    },
+
+    /**
+     * Configure un gestionnaire d'événements sur le champ is_comptant
+     */
+    setupComptantHandler() {
+        if (this.props.record && this.props.record.resModel === 'account.move') {
+            // Utiliser une mutation observer pour détecter quand le DOM est prêt
+            const observer = new MutationObserver((mutations) => {
+                const comptantField = this.el?.querySelector('input[name="is_comptant"]');
+                if (comptantField && !comptantField.hasAttribute('data-listener-added')) {
+                    this._addComptantListener(comptantField);
+                    comptantField.setAttribute('data-listener-added', 'true');
                 }
-                return Promise.resolve();
             });
-        },
-        
-        /**
-         * Configure un gestionnaire d'événements sur le champ is_comptant
-         */
-        _setupComptantHandler: function () {
-            var self = this;
-            
-            // Sélectionner le champ is_comptant dans le DOM
-            this.$el.find('input[name="is_comptant"]').on('change', function (event) {
-                var isComptant = $(this).prop('checked');
+
+            if (this.el) {
+                observer.observe(this.el, { childList: true, subtree: true });
                 
-                // Si le champ passe à True (coché)
-                if (isComptant) {
-                    var state = self.$el.find('select[name="state"]').val() || 
-                               self.$el.find('input[name="state"]').val();
-                    var moveType = self.$el.find('select[name="move_type"]').val() || 
-                                  self.$el.find('input[name="move_type"]').val();
+                // Nettoyer l'observer après un délai raisonnable
+                setTimeout(() => observer.disconnect(), 2000);
+            }
+        }
+    },
+
+    /**
+     * Ajoute l'écouteur d'événement sur le champ is_comptant
+     */
+    _addComptantListener(comptantField) {
+        comptantField.addEventListener('change', (event) => {
+            const isComptant = event.target.checked;
+            
+            if (isComptant) {
+                const record = this.props.record;
+                const moveType = record.data.move_type;
+                const state = record.data.state;
+                
+                // Vérifier si c'est une facture/avoir client en brouillon
+                if (['out_invoice', 'out_refund'].includes(moveType) && state === 'draft') {
+                    const today = new Date().toISOString().split('T')[0];
                     
-                    // Vérifier si c'est une facture/avoir client en brouillon
-                    if (['out_invoice', 'out_refund'].includes(moveType) && state === 'draft') {
-                        var today = new Date().toISOString().split('T')[0]; // Format YYYY-MM-DD
-                        
-                        // Récupérer les valeurs actuelles des dates
-                        var invoiceDate = self.$el.find('input[name="invoice_date"]').val();
-                        var invoiceDateDue = self.$el.find('input[name="invoice_date_due"]').val();
-                        
-                        // Mettre à jour la date de facture si vide
-                        if (!invoiceDate) {
-                            self.$el.find('input[name="invoice_date"]').val(today).trigger('change');
-                        }
-                        
-                        // Mettre à jour la date d'échéance si vide
-                        if (!invoiceDateDue) {
-                            self.$el.find('input[name="invoice_date_due"]').val(today).trigger('change');
-                        }
+                    // Mettre à jour la date de facture si vide
+                    const invoiceDateField = this.el?.querySelector('input[name="invoice_date"]');
+                    if (invoiceDateField && !invoiceDateField.value) {
+                        invoiceDateField.value = today;
+                        invoiceDateField.dispatchEvent(new Event('input', { bubbles: true }));
+                        invoiceDateField.dispatchEvent(new Event('change', { bubbles: true }));
+                    }
+                    
+                    // Mettre à jour la date d'échéance si vide
+                    const invoiceDateDueField = this.el?.querySelector('input[name="invoice_date_due"]');
+                    if (invoiceDateDueField && !invoiceDateDueField.value) {
+                        invoiceDateDueField.value = today;
+                        invoiceDateDueField.dispatchEvent(new Event('input', { bubbles: true }));
+                        invoiceDateDueField.dispatchEvent(new Event('change', { bubbles: true }));
                     }
                 }
-            });
-        },
-    });
-    
-    return {
-        FormRenderer: FormRenderer
-    };
+            }
+        });
+    },
 });

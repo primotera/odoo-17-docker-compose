@@ -14,9 +14,13 @@
     'depends': ['account'],
     'data': [
         'views/account_move_views.xml',
-        'views/assets.xml',
         'data/ir_sequence_data.xml',
     ],
+    'assets': {
+        'web.assets_backend': [
+            'comptant_partner/static/src/js/account_move_polling.js',
+        ],
+    },
     'installable': True,
     'application': False,
     'auto_install': False,

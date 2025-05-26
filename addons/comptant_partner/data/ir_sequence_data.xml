@@ -5,7 +5,7 @@
         <record id="sequence_facture_normale" model="ir.sequence">
             <field name="name">Séquence Facture Normale</field>
             <field name="code">facture.normale.sequence</field>
-            <field name="prefix">FT-</field>
+            <field name="prefix">FT/%(year)s/</field>
             <field name="padding">5</field>
             <field name="company_id" eval="False"/>
         </record>
@@ -14,7 +14,7 @@
         <record id="sequence_facture_comptant" model="ir.sequence">
             <field name="name">Séquence Facture Comptant</field>
             <field name="code">facture.comptant.sequence</field>
-            <field name="prefix">FC-</field>
+            <field name="prefix">FC/%(year)s/</field>
             <field name="padding">5</field>
             <field name="company_id" eval="False"/>
         </record>
@@ -23,7 +23,7 @@
         <record id="sequence_avoir_normal" model="ir.sequence">
             <field name="name">Séquence Avoir Normal</field>
             <field name="code">avoir.normale.sequence</field>
-            <field name="prefix">AT-</field>
+            <field name="prefix">AT/%(year)s/</field>
             <field name="padding">5</field>
             <field name="company_id" eval="False"/>
         </record>
@@ -32,7 +32,7 @@
         <record id="sequence_avoir_comptant" model="ir.sequence">
             <field name="name">Séquence Avoir Comptant</field>
             <field name="code">avoir.comptant.sequence</field>
-            <field name="prefix">AC-</field>
+            <field name="prefix">AC/%(year)s/</field>
             <field name="padding">5</field>
             <field name="company_id" eval="False"/>
         </record>
