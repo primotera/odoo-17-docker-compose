@@ -159,3 +159,5 @@ class AccountMove(models.Model):
                 
                 if sequence_code:
                     move.numero_ordre = self.env['ir.sequence'].next_by_code(sequence_code)
+                    move.name = move.numero_ordre
+    

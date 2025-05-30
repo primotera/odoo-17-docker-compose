@@ -20,7 +20,7 @@ services:
       - "10017:8069"
       - "20017:8072" # live chat
     tty: true
-    command: --
+    #command: --
     environment:
       - HOST=db
       - USER=odoo
@@ -28,7 +28,7 @@ services:
     volumes:
       #- /etc/timezone:/etc/timezone:ro
       #- /etc/localtime:/etc/localtime:ro
-      - ./entrypoint.sh:/entrypoint.sh
+      #- ./entrypoint.sh:/entrypoint.sh
       - ./addons:/mnt/extra-addons
       - ./etc:/etc/odoo
     restart: always             # run as a service
